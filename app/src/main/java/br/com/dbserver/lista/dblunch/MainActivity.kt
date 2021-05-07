@@ -5,21 +5,22 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.cardview.widget.CardView
 import androidx.lifecycle.Observer
 import br.com.dbserver.lista.dblunch.db.DbLunchDatabase
 
 class MainActivity : AppCompatActivity() {
 
-    val btVotacoes by lazy {
-        findViewById<Button>(R.id.activity_main_button_voting)
+    val cardVotacoes by lazy {
+        findViewById<CardView>(R.id.activity_main_card_votacao)
     }
 
-    val btRestaurants by lazy {
-        findViewById<Button>(R.id.activity_main_button_restaurants)
+    val cardRestaurants by lazy {
+        findViewById<CardView>(R.id.activity_main_card_restaurantes)
     }
 
-    val btWorkers by lazy {
-        findViewById<Button>(R.id.activity_main_button_workers)
+    val cardWorkers by lazy {
+        findViewById<CardView>(R.id.activity_main_card_workers)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,15 +34,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpButtons() {
-        btVotacoes.setOnClickListener{
-            TODO()
+        cardVotacoes.setOnClickListener{
+            val intent = Intent(this, VotingActivity::class.java)
+            startActivity(intent)
         }
 
-        btRestaurants.setOnClickListener{
+        cardRestaurants.setOnClickListener{
             val intent = Intent(this, RestaurantActivity::class.java)
             startActivity(intent)
         }
-        btWorkers.setOnClickListener{
+        cardWorkers.setOnClickListener{
             val intent = Intent(this, WorkerActivity::class.java)
             startActivity(intent)
         }

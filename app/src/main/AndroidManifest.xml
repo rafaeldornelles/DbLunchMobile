@@ -9,7 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WorkerActivity" android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".VotingFormActivity" android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".VotingActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".WorkerActivity"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".RestaurantActivity"
             android:parentActivityName=".MainActivity" />

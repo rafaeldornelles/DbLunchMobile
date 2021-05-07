@@ -3,37 +3,52 @@ package br.com.dbserver.lista.dblunch
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.util.Log
+import android.view.*
+import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import br.com.dbserver.lista.dblunch.Model.Restaurant
+import br.com.dbserver.lista.dblunch.ViewModel.RestaurantViewModel
+import br.com.dbserver.lista.dblunch.ViewModel.RestaurantViewModelFactory
 import br.com.dbserver.lista.dblunch.adapter.RestaurantAdapter
 import br.com.dbserver.lista.dblunch.db.DbLunchDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-class RestaurantActivity : AppCompatActivity() {
-    val rvRestaurants by lazy {
+class RestaurantActivity : AppCompatActivity(), RestaurantAdapter.RestaurantListener {
+
+    private val rvRestaurants by lazy {
         findViewById<RecyclerView>(R.id.activity_restaurant_list)
     }
-    val restaurants = ArrayList<Restaurant>()
+
+    private var adapterLongClickPosition: Int = 0
+    val restaurantAdapter = RestaurantAdapter(ArrayList(), this)
+
+
+    private val viewModel by lazy {ViewModelProviders.of(this, RestaurantViewModelFactory(application)).get(RestaurantViewModel::class.java)}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_restaurant)
         title = "Restaurantes"
 
-        rvRestaurants.adapter = RestaurantAdapter(restaurants)
-        DbLunchDatabase.getInstance(applicationContext).restaurantDao().all().observe(this, Observer {
-            restaurants.clear()
-            restaurants.addAll(it)
-            rvRestaurants.adapter?.notifyDataSetChanged()
+        rvRestaurants.adapter = restaurantAdapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadRestaurants()
+    }
+
+    private fun loadRestaurants() {
+        viewModel.getRestaurants().observe(this, Observer {
+            restaurantAdapter.setRestaurants(it)
         })
     }
 
@@ -49,9 +64,9 @@ class RestaurantActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun showRestaurantForm(res:Restaurant?){
+    fun showRestaurantForm(res:Restaurant?, editmode:Boolean = false){
         AlertDialog.Builder(this).apply {
-            setTitle("Incluir um restaurante")
+            setTitle(if (editmode) "Editar restaurante" else "Incluir um restaurante")
             val view = layoutInflater.inflate(R.layout.dialog_restaurant_form, null)
             setView(view)
             val etRestaurantName = view.findViewById<EditText>(R.id.dialog_restaurant_form_name)
@@ -65,16 +80,53 @@ class RestaurantActivity : AppCompatActivity() {
                     showRestaurantForm(restaurant)
                     return@setPositiveButton
                 }
-
                 CoroutineScope(IO).launch {
-                    DbLunchDatabase.getInstance(applicationContext).restaurantDao().insert(restaurant)
+                    viewModel.insertRestaurant(restaurant)
                 }
-
-                restaurants.add(restaurant)
-                rvRestaurants.adapter?.notifyDataSetChanged()
+                loadRestaurants()
             }
             setNegativeButton("Cancelar", null)
             show()
         }
+    }
+
+    override fun onEditRestaurant(restaurant: Restaurant) {
+        showRestaurantForm(restaurant, true)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        menuInflater.inflate(R.menu.menu_delete, menu)
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.menu_delete -> {
+                val restaurant = restaurantAdapter.restaurants[adapterLongClickPosition]
+                AlertDialog.Builder(this).apply {
+                    setTitle("Remover Restaurante")
+                    setMessage("Tem certeza de que deseja remover o restaurante ${restaurant.name}?")
+                    setPositiveButton("Sim") { dialogInterface, i ->
+                        removeRestaurant(restaurant)
+                    }
+                    setNegativeButton("Não", null)
+                    show()
+                }
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    fun removeRestaurant(restaurant: Restaurant){
+        CoroutineScope(IO).launch {
+            viewModel.deleteRestaurant(restaurant)
+        }
+        loadRestaurants()
+    }
+
+    override fun onContextMenuShown(position: Int) {
+        adapterLongClickPosition = position
     }
 }

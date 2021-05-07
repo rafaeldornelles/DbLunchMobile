@@ -2,34 +2,50 @@ package br.com.dbserver.lista.dblunch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.get
 import androidx.recyclerview.widget.RecyclerView
 import br.com.dbserver.lista.dblunch.Model.Restaurant
 import br.com.dbserver.lista.dblunch.Model.Worker
+import br.com.dbserver.lista.dblunch.ViewModel.WorkerViewModel
+import br.com.dbserver.lista.dblunch.ViewModel.WorkerViewModelFactory
 import br.com.dbserver.lista.dblunch.adapter.WorkerAdapter
 import br.com.dbserver.lista.dblunch.db.DbLunchDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class WorkerActivity : AppCompatActivity() {
+class WorkerActivity : AppCompatActivity(), WorkerAdapter.WorkerListener {
     val rvWorkers by lazy { findViewById<RecyclerView>(R.id.activity_worker_list) }
-    val workers = ArrayList<Worker>()
+
+    private var adapterLongClickPosition: Int = 0
+    val workerAdapter = WorkerAdapter(ArrayList(), this)
+    val viewModel by lazy { ViewModelProviders.of(this, WorkerViewModelFactory(application)).get(WorkerViewModel::class.java) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_worker)
         title = "Colaboradores"
 
-        rvWorkers.adapter = WorkerAdapter(workers)
+        rvWorkers.adapter = workerAdapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadWorkers()
+    }
+
+    private fun loadWorkers() {
         DbLunchDatabase.getInstance(applicationContext).workerDao().all().observe(this, Observer {
-            workers.clear()
-            workers.addAll(it)
-            rvWorkers.adapter?.notifyDataSetChanged()
+            workerAdapter.setWorkers(it)
         })
     }
 
@@ -45,9 +61,9 @@ class WorkerActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun showWorkerForm(worker:Worker?){
+    fun showWorkerForm(worker:Worker?, editmode:Boolean = false){
         AlertDialog.Builder(this).apply {
-            setTitle("Incluir um colaborador")
+            setTitle(if (editmode) "Editar colaborador" else "Incluir um colaborador")
             val view = layoutInflater.inflate(R.layout.dialog_worker_form, null)
             setView(view)
             val etWorkerName = view.findViewById<EditText>(R.id.dialog_worker_form_name)
@@ -63,14 +79,53 @@ class WorkerActivity : AppCompatActivity() {
                 }
 
                 CoroutineScope(Dispatchers.IO).launch {
-                    DbLunchDatabase.getInstance(applicationContext).workerDao().insert(workerFromForm)
+                    viewModel.insertWorker(workerFromForm)
                 }
-
-                workers.add(workerFromForm)
-                rvWorkers.adapter?.notifyDataSetChanged()
+                loadWorkers()
             }
             setNegativeButton("Cancelar", null)
             show()
         }
     }
+
+    override fun onEditWorker(worker: Worker){
+        showWorkerForm(worker, true)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        menuInflater.inflate(R.menu.menu_delete, menu)
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.menu_delete -> {
+                val worker = workerAdapter.workers[adapterLongClickPosition]
+                AlertDialog.Builder(this).apply {
+                    setTitle("Remover Colaborador")
+                    setMessage("Tem certeza de que deseja remover o colaborador ${worker.name}?")
+                    setPositiveButton("Sim") { dialogInterface, i ->
+                        removeWorker(worker)
+                    }
+                    setNegativeButton("Não", null)
+                    show()
+                }
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
+    }
+
+    fun removeWorker(worker: Worker){
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.deleteWorker(worker)
+        }
+        loadWorkers()
+    }
+
+    override fun onContextMenuShown(position: Int) {
+        adapterLongClickPosition = position
+    }
+
 }
