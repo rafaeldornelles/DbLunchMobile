@@ -3,19 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingVertical="18dp"
+    android:paddingHorizontal="12dp"
+>
 
     <TextView
         android:id="@+id/item_worker_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Século"
+        style="@style/simple_item_principal"
         />
     <TextView
         android:id="@+id/item_worker_function"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Rua Oswaldo Aranha, 52"
+        style="@style/simple_item_subtitle"
         />
 
 

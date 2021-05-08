@@ -2,6 +2,7 @@ package br.com.dbserver.lista.dblunch
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.core.view.get
 import androidx.lifecycle.MutableLiveData
@@ -61,23 +62,22 @@ class VotingFormActivity : AppCompatActivity() {
                 finish()
                 Toast.makeText(this, "Voto inserido com sucesso", Toast.LENGTH_LONG).show()
             } else {
-                Toast.makeText(this, "Selecione um restaurante e um usuário", Toast.LENGTH_SHORT)
-                    .show()
+                findViewById<ImageView>(R.id.activity_voting_form_restaurant_error_icon).visibility = if (selectedRestaurant == null) View.VISIBLE else View.INVISIBLE
+                findViewById<TextView>(R.id.activity_voting_form_restaurant_error).visibility = if (selectedRestaurant == null) View.VISIBLE else View.INVISIBLE
+                findViewById<TextView>(R.id.activity_voting_form_worker_error).visibility = if (selectedWorker == null) View.VISIBLE else View.INVISIBLE
+                findViewById<ImageView>(R.id.activity_voting_form_worker_error_icon).visibility = if (selectedWorker == null) View.VISIBLE else View.INVISIBLE
+
             }
         }
     }
 
-    private fun loadSpWorkers() {
-
-
-    }
     override fun onResume() {
         loadScreen()
         super.onResume()
     }
 
     fun loadScreen(){
-        viewModel.getworkers().observe(this, Observer {list ->
+        viewModel.getAvaliableWorkers().observe(this, Observer {list ->
             workerSpinnerAdapter.setWorkers(list)
         })
 

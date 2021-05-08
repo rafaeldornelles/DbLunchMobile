@@ -10,12 +10,17 @@ import android.view.MenuItem
 import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.dbserver.lista.dblunch.Constantes.DATE_EXTRA
 import br.com.dbserver.lista.dblunch.ViewModel.VotingViewModel
 import br.com.dbserver.lista.dblunch.ViewModel.VotingViewModelFactory
 import br.com.dbserver.lista.dblunch.adapter.RestaurantResultAdapter
+import com.google.android.material.datepicker.MaterialDatePicker
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 
@@ -34,8 +39,11 @@ class VotingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_voting)
+        title = "Status da votação"
 
         rvRestaurants.adapter = restaurantAdapter
+        val dividerItemDecoration = DividerItemDecoration(rvRestaurants.context, (rvRestaurants.layoutManager as LinearLayoutManager).orientation);
+        rvRestaurants.addItemDecoration(dividerItemDecoration)
 
         btnVote.setOnClickListener {
             val intent = Intent(this, VotingFormActivity::class.java).apply {
@@ -51,6 +59,13 @@ class VotingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     }
 
     fun loadScreen(){
+        if (viewModel.date.value!!.dayOfWeek == DayOfWeek.SATURDAY){
+            viewModel.date.value = viewModel.date.value!!.plusDays(2)
+        }
+        if (viewModel.date.value!!.dayOfWeek == DayOfWeek.SUNDAY){
+            viewModel.date.value = viewModel.date.value!!.plusDays(1)
+        }
+
         viewModel.date.observe(this, Observer {
             tvDate.text = it.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         })
@@ -88,11 +103,16 @@ class VotingActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
     }
 
     fun showDatePicker(){
-        DatePickerDialog(this, this, viewModel.date.value!!.year, viewModel.date.value!!.monthValue, viewModel.date.value!!.dayOfMonth).show()
+        Log.i("AAAA", viewModel.date.value!!.toString())
+        DatePickerDialog(this, this, viewModel.date.value!!.year, viewModel.date.value!!.monthValue -1, viewModel.date.value!!.dayOfMonth).apply {
+            show()
+        }
     }
 
+
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        viewModel.date.value = LocalDate.of(year, month, dayOfMonth)
+        val selectedDate = LocalDate.of(year, month +1, dayOfMonth)
+        viewModel.date.value = selectedDate
         loadScreen()
     }
 }

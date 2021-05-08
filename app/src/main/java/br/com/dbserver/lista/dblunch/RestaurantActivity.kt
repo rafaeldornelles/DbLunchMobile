@@ -1,6 +1,7 @@
 package br.com.dbserver.lista.dblunch
 
 import android.app.Dialog
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -64,20 +65,26 @@ class RestaurantActivity : AppCompatActivity(), RestaurantAdapter.RestaurantList
         return super.onOptionsItemSelected(item)
     }
 
-    fun showRestaurantForm(res:Restaurant?, editmode:Boolean = false){
+    fun showRestaurantForm(res:Restaurant?, editmode:Boolean = false, checkErrors: Boolean =false){
         AlertDialog.Builder(this).apply {
             setTitle(if (editmode) "Editar restaurante" else "Incluir um restaurante")
             val view = layoutInflater.inflate(R.layout.dialog_restaurant_form, null)
             setView(view)
             val etRestaurantName = view.findViewById<EditText>(R.id.dialog_restaurant_form_name)
             val etRestaurantAddress = view.findViewById<EditText>(R.id.dialog_restaurant_form_address)
-            etRestaurantName.setText(res?.name)
+
             etRestaurantAddress.setText(res?.address)
+            etRestaurantName.setText(res?.name)
+
+            if (checkErrors){
+                view.findViewById<TextView>(R.id.dialog_restaurant_form_name_error).visibility = if (etRestaurantName.text.isEmpty()) View.VISIBLE else View.INVISIBLE
+                view.findViewById<TextView>(R.id.dialog_restaurant_form_address_error).visibility = if (etRestaurantAddress.text.isEmpty()) View.VISIBLE else View.INVISIBLE
+            }
 
             setPositiveButton("Ok") { dialogInterface, i ->
                 val restaurant = Restaurant(res?.id ?: 0, etRestaurantName.text.toString(), etRestaurantAddress.text.toString())
                 if (etRestaurantAddress.text.isEmpty()||etRestaurantName.text.isEmpty()){
-                    showRestaurantForm(restaurant)
+                    showRestaurantForm(restaurant, editmode, true)
                     return@setPositiveButton
                 }
                 CoroutineScope(IO).launch {

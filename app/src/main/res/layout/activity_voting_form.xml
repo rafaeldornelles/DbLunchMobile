@@ -13,6 +13,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="24dp"
+        android:layout_marginHorizontal="18dp"
         />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -25,10 +27,11 @@
         />
 
     <Spinner
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginVertical="18dp"
         android:id="@+id/activity_voting_form_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/activity_voting_form_lista"
+        android:layout_height="32dp"
         app:layout_constraintBottom_toTopOf="@id/activity_voting_form_submit"
         />
     <Button
@@ -38,7 +41,51 @@
         android:text="Votar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/activity_voting_form_restaurant_error"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
         />
+
+
+    <ImageView
+        android:id="@+id/activity_voting_form_restaurant_error_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_info_outline_red_foreground"
+        app:layout_constraintTop_toTopOf="@id/activity_voting_form_restaurant_error"
+        app:layout_constraintBottom_toBottomOf="@id/activity_voting_form_restaurant_error"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
+        />
+    <TextView
+        android:id="@+id/activity_voting_form_restaurant_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecione um restaurante"
+        android:visibility="invisible"
+        android:textColor="@android:color/holo_red_dark"
+        app:layout_constraintTop_toBottomOf="@id/activity_voting_form_spinner"
+        app:layout_constraintStart_toEndOf="@id/activity_voting_form_restaurant_error_icon" />
+    <ImageView
+        android:id="@+id/activity_voting_form_worker_error_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_info_outline_red_foreground"
+        app:layout_constraintTop_toTopOf="@id/activity_voting_form_worker_error"
+        app:layout_constraintBottom_toBottomOf="@id/activity_voting_form_worker_error"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"
+        />
+    <TextView
+        android:id="@+id/activity_voting_form_worker_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Selecione um colaborador"
+        android:visibility="invisible"
+        android:textColor="@android:color/holo_red_dark"
+        app:layout_constraintTop_toBottomOf="@id/activity_voting_form_restaurant_error"
+        app:layout_constraintStart_toEndOf="@id/activity_voting_form_restaurant_error_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="18dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

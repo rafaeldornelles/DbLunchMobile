@@ -7,10 +7,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.get
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.dbserver.lista.dblunch.Model.Restaurant
 import br.com.dbserver.lista.dblunch.Model.Worker
@@ -36,6 +39,8 @@ class WorkerActivity : AppCompatActivity(), WorkerAdapter.WorkerListener {
         title = "Colaboradores"
 
         rvWorkers.adapter = workerAdapter
+        val dividerItemDecoration = DividerItemDecoration(rvWorkers.context, (rvWorkers.layoutManager as LinearLayoutManager).orientation);
+        rvWorkers.addItemDecoration(dividerItemDecoration)
     }
 
     override fun onResume() {
@@ -61,7 +66,7 @@ class WorkerActivity : AppCompatActivity(), WorkerAdapter.WorkerListener {
         return super.onOptionsItemSelected(item)
     }
 
-    fun showWorkerForm(worker:Worker?, editmode:Boolean = false){
+    fun showWorkerForm(worker:Worker?, editmode:Boolean = false, checkErrors:Boolean=false){
         AlertDialog.Builder(this).apply {
             setTitle(if (editmode) "Editar colaborador" else "Incluir um colaborador")
             val view = layoutInflater.inflate(R.layout.dialog_worker_form, null)
@@ -71,10 +76,15 @@ class WorkerActivity : AppCompatActivity(), WorkerAdapter.WorkerListener {
             etWorkerName.setText(worker?.name)
             etWorkerFunction.setText(worker?.function)
 
+            if (checkErrors){
+                view.findViewById<TextView>(R.id.dialog_worker_form_name_error).visibility = if (etWorkerName.text.isEmpty()) View.VISIBLE else View.INVISIBLE
+                view.findViewById<TextView>(R.id.dialog_worker_form_function_error).visibility = if (etWorkerFunction.text.isEmpty()) View.VISIBLE else View.INVISIBLE
+            }
+
             setPositiveButton("Ok") { dialogInterface, i ->
                 val workerFromForm = Worker(worker?.id ?: 0, etWorkerName.text.toString(), etWorkerFunction.text.toString())
                 if (etWorkerName.text.isEmpty()||etWorkerFunction.text.isEmpty()){
-                    showWorkerForm(workerFromForm)
+                    showWorkerForm(workerFromForm, editmode, true)
                     return@setPositiveButton
                 }
 

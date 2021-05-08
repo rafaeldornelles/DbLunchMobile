@@ -8,4 +8,25 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="cardMainStyle" parent="CardView">
+        <item name="cardCornerRadius">18dp</item>
+        <item name="cardBackgroundColor">@color/colorPrimary</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="cardText" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:layout_marginLeft">18dp</item>
+    </style>
+
+    <style name="simple_item_principal">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+    <style name="simple_item_subtitle">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+    </style>
+
 </resources>

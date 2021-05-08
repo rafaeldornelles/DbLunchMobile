@@ -8,6 +8,7 @@ import android.widget.SpinnerAdapter
 import androidx.lifecycle.*
 import br.com.dbserver.lista.dblunch.Model.Restaurant
 import br.com.dbserver.lista.dblunch.Model.Vote
+import br.com.dbserver.lista.dblunch.Model.Worker
 import br.com.dbserver.lista.dblunch.db.DbLunchDatabase
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -29,9 +30,20 @@ class VotingViewModel(val application: Application): ViewModel() {
     fun getVotesInDateByRestaurant(resId: Int) = voteDao.getVotesInDateByRestaurant(date.value!!,resId)
     fun getVoteCount(): LiveData<Int> = Transformations.map(getvotesInDate()){it.count()}
 
-    fun acceptsVotes() = Transformations.map(date){ it.atStartOfDay().plusHours(12).isAfter(LocalDateTime.now()) }
+    fun acceptsVotes() =
+        Transformations.switchMap(date) { date ->
+            Transformations.map(getAvaliableWorkers()) {
+                date.atStartOfDay().plusHours(12).isAfter(LocalDateTime.now()) && it.count() > 0
+            }
+        }
 
-
+    fun getAvaliableWorkers(): LiveData<List<Worker>> {
+        return Transformations.switchMap(getworkers()){workers ->
+            Transformations.map(getvotesInDate()){votes ->
+                workers.filter {worker -> votes.none { it.worker?.id ==  worker.id} }
+            }
+        }
+    }
 
 
     class RestaurantInDate(val restaurant: Restaurant, val numberOfVotes: Int, val isAvaliable:Boolean, val totalVotes:Int)

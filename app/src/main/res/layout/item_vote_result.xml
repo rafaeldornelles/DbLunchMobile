@@ -5,15 +5,32 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingVertical="28dp"
+    android:paddingHorizontal="18dp">
 
+    <TextView
+        android:id="@+id/item_vote_result_position"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="1"
+        android:textSize="18dp"
+        app:layout_constraintTop_toTopOf="@id/item_vote_result_restaurant_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/item_vote_result_restaurant"
+        android:textColor="@android:color/white"
+        android:background="@drawable/circle_shape"
+        />
     <TextView
         android:id="@+id/item_vote_result_restaurant_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="Restaurante"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toEndOf="@id/item_vote_result_position"
+        android:textColor="@color/colorPrimaryDark"/>
     <TextView
         app:layout_constraintHorizontal_weight="1"
         android:id="@+id/item_vote_result_restaurant"
@@ -26,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/item_vote_result_restaurant_label"/>
     <TextView
         android:id="@+id/item_vote_result_votes_label"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Votos: "
@@ -33,6 +51,7 @@
         app:layout_constraintEnd_toStartOf="@id/item_vote_result_votes"/>
     <TextView
         android:id="@+id/item_vote_result_votes"
+        android:textColor="@color/colorPrimaryDark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="0"
@@ -42,7 +61,8 @@
     <ProgressBar
         app:layout_constraintHorizontal_weight="1"
         android:id="@+id/item_vote_restaurant_progress"
-        android:layout_width="0dp"
+        android:layout_width="82dp"
+        android:layout_marginStart="8dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/item_vote_result_restaurant"
         app:layout_constraintBottom_toBottomOf="@id/item_vote_result_restaurant"

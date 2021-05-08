@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     android:padding="8dp"
     tools:context=".MainActivity"
-    android:layout_marginBottom="82dp">
+    android:layout_marginBottom="50dp">
 
    <TextView
        android:id="@+id/activity_main_welcome"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:text="Bem-Vindo"
+       android:textSize="24dp"
        app:layout_constraintTop_toTopOf="parent"
        app:layout_constraintStart_toStartOf="parent"/>
 
@@ -33,10 +34,9 @@
         app:layout_constraintTop_toBottomOf="@id/activity_main_choose"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@id/activity_main_card_restaurantes"
-        app:cardCornerRadius="18dp"
-        app:cardBackgroundColor="@color/colorPrimary"
+        style="@style/cardMainStyle"
+        android:layout_marginTop="18dp"
         >
       <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
@@ -48,11 +48,11 @@
               android:layout_width="0dp"
               android:layout_height="match_parent"
               app:layout_constraintTop_toTopOf="parent"
-              android:tint="@color/cardview_dark_background"
               app:layout_constraintBottom_toBottomOf="parent"
               app:layout_constraintStart_toStartOf="parent"
               app:layout_constraintEnd_toStartOf="@id/activity_main_card_votacao_text"
-              android:src="@drawable/ic_date_range_white_24dp" />
+              android:src="@drawable/ic_date_range_white_24dp"
+              />
 
           <TextView
               android:id="@+id/activity_main_card_votacao_text"
@@ -63,7 +63,9 @@
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintHorizontal_weight="3"
               app:layout_constraintStart_toEndOf="@id/activity_main_card_votacao_icon"
-              app:layout_constraintTop_toTopOf="@+id/activity_main_card_votacao_icon" />
+              app:layout_constraintTop_toTopOf="@+id/activity_main_card_votacao_icon"
+              style="@style/cardText"
+              />
 
       </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,13 +75,11 @@
         android:id="@+id/activity_main_card_restaurantes"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/activity_main_card_votacao"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/activity_main_card_workers"
-        app:cardCornerRadius="18dp"
-        app:cardBackgroundColor="@color/colorPrimary"
+        style="@style/cardMainStyle"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,7 +92,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_restaurant_menu_black_24dp"
-                android:tint="@color/cardview_dark_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/activity_main_card_restaurantes_text"
                 app:layout_constraintHorizontal_weight="1"
@@ -108,7 +107,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="3"
                 app:layout_constraintStart_toEndOf="@id/activity_main_card_restaurantes_icon"
-                app:layout_constraintTop_toTopOf="@+id/activity_main_card_restaurantes_icon" />
+                app:layout_constraintTop_toTopOf="@+id/activity_main_card_restaurantes_icon"
+                style="@style/cardText"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,13 +119,11 @@
         android:id="@+id/activity_main_card_workers"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/activity_main_card_restaurantes"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:cardCornerRadius="18dp"
-        app:cardBackgroundColor="@color/colorPrimary"
+        style="@style/cardMainStyle"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -138,7 +136,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_person_black_24dp"
-                android:tint="@color/cardview_dark_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/activity_main_card_workers_text"
                 app:layout_constraintHorizontal_weight="1"
@@ -154,7 +151,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="3"
                 app:layout_constraintStart_toEndOf="@id/activity_main_card_workers_icon"
-                app:layout_constraintTop_toTopOf="@+id/activity_main_card_workers_icon" />
+                app:layout_constraintTop_toTopOf="@+id/activity_main_card_workers_icon"
+                style="@style/cardText"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

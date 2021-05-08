@@ -3,6 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
+    android:paddingVertical="18dp"
+    android:paddingHorizontal="12dp"
     >
 
     <TextView
@@ -10,12 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Século"
+        style="@style/simple_item_principal"
         />
     <TextView
         android:id="@+id/item_restaurant_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Rua Oswaldo Aranha, 52"
+        style="@style/simple_item_subtitle"
         />
 
 
