@@ -40,7 +40,7 @@ abstract class DbLunchDatabase: RoomDatabase(){
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
                 CoroutineScope(IO).launch {
-                    doPopulate(instance)
+                    //doPopulate(instance)
                 }
             }
         }
