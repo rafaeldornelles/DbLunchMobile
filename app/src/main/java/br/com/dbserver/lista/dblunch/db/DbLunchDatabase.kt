@@ -62,6 +62,9 @@ abstract class DbLunchDatabase: RoomDatabase(){
                         Worker(0, "Julia", "Designer")
                     )
                 }
+            if (db.voteDao().all().value.isNullOrEmpty()) {
+                db.voteDao().clear()
+            }
         }
 
     }

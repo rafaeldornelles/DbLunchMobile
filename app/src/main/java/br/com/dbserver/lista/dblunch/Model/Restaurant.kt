@@ -5,7 +5,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity
-class Restaurant (
+data class Restaurant (
     @PrimaryKey(autoGenerate = true)
     val id:Int,
     val name: String,

@@ -29,7 +29,6 @@ class MainActivity : AppCompatActivity() {
 
         setUpButtons()
         DbLunchDatabase.getInstance(applicationContext).restaurantDao().all().observe(this, Observer {
-            Log.i("AAAA", it.size.toString())
         })
     }
 

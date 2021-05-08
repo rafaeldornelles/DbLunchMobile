@@ -14,18 +14,15 @@ import br.com.dbserver.lista.dblunch.R
 class RestaurantFormAdapter(val restaurants: ArrayList<Restaurant>): RecyclerView.Adapter<RestaurantFormAdapter.RestaurantFormViewHolder>() {
     override fun onBindViewHolder(holder: RestaurantFormViewHolder, position: Int) {
         val restaurant = restaurants[position]
-        Log.i("AAAA", restaurant.name)
         holder.bind(restaurant)
     }
 
     override fun getItemCount(): Int {
-        Log.i("AAAA", "itemsz: ${restaurants.size}")
         return restaurants.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RestaurantFormViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_restaurant_form_option, parent, false)
-        Log.i("AAAA", "AAAA")
         return RestaurantFormViewHolder(view)
     }
 
@@ -45,7 +42,7 @@ class RestaurantFormAdapter(val restaurants: ArrayList<Restaurant>): RecyclerVie
 
         fun selectRestaurant(selectedRestaurant: Restaurant){
             for (restaurant in restaurants){
-                restaurant.selected = restaurant.id == selectedRestaurant.id
+                restaurant.selected = restaurant.id == selectedRestaurant.id && !restaurant.selected
                 notifyDataSetChanged()
             }
         }
@@ -61,5 +58,9 @@ class RestaurantFormAdapter(val restaurants: ArrayList<Restaurant>): RecyclerVie
         restaurants.clear()
         restaurants.addAll(newRestaurants)
         notifyDataSetChanged()
+    }
+
+    fun getSelectedRestaurant(): Restaurant? {
+        return restaurants.firstOrNull{it.selected}
     }
 }

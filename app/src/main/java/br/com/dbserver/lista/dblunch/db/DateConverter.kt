@@ -1,20 +1,19 @@
 package br.com.dbserver.lista.dblunch.db
 
 import androidx.room.TypeConverter
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 class DateConverters {
     @TypeConverter
-    fun dateToString(date: Date): String{
-        val formatter = SimpleDateFormat("yyyy-MM-dd")
-        return formatter.format(date)
+    fun dateToString(date: LocalDate): String{
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return date.format(formatter)
     }
 
     @TypeConverter
-    fun stringToDate(date: String): Date {
-        val formatter = SimpleDateFormat("yyyy-MM-dd")
-        return formatter.parse(date) ?: Date()
+    fun stringToDate(date: String): LocalDate {
+        return LocalDate.parse(date)
     }
 }
